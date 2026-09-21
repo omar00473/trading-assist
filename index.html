@@ -1,122 +1,550 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
-<link rel="manifest" href="manifest.webmanifest">
 <title>Trading Assistant</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fa;color:#111827}
-main{max-width:760px;margin:auto;padding:18px 14px 36px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.brand{font-size:22px;font-weight:800}.badge{font-size:12px;padding:6px 9px;border-radius:999px;background:#e5e7eb}
-.card{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:15px;margin-bottom:12px}.muted{color:#6b7280;font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}}
-label{display:block;font-size:12px;color:#6b7280;margin-bottom:5px}input,select,button{width:100%;min-height:44px;border-radius:11px;border:1px solid #d1d5db;padding:9px 10px;font-size:16px;background:white;color:#111827}button{border:0;background:#111827;color:white;font-weight:700;cursor:pointer}.secondary{background:#eef2f7;color:#111827}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{width:auto;padding:9px 14px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:14px}.label{font-size:12px;color:#6b7280}.big{font-size:21px;font-weight:800;margin-top:3px}
-.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
-svg{width:100%;height:210px;background:#fafafa;border:1px solid #e5e7eb;border-radius:12px}
-#reason{line-height:1.5}.danger{color:#b42318}.ok{color:#087443}
-small{color:#6b7280;line-height:1.45;display:block}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f4f6;
+  color:#111827;
+}
+header{
+  background:#111827;
+  color:white;
+  padding:22px 16px;
+}
+header h1{margin:0 0 6px;font-size:25px}
+header p{margin:0;color:#cbd5e1}
+main{max-width:900px;margin:auto;padding:16px}
+.card{
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:16px;
+  box-shadow:0 2px 8px #0001;
+}
+h2{margin-top:0;font-size:19px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+label{
+  font-size:13px;
+  font-weight:bold;
+  color:#374151;
+}
+input,select,button{
+  width:100%;
+  padding:11px;
+  margin-top:5px;
+  border:1px solid #d1d5db;
+  border-radius:9px;
+  font-size:15px;
+}
+button{
+  background:#111827;
+  color:white;
+  border:0;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.secondary{background:#64748b}
+.status{
+  display:inline-block;
+  padding:7px 10px;
+  border-radius:20px;
+  background:#e5e7eb;
+  font-size:13px;
+  margin-bottom:12px;
+}
+.status.ok{background:#dcfce7;color:#166534}
+.status.error{background:#fee2e2;color:#991b1b}
+.signal{
+  padding:16px;
+  border-radius:12px;
+  background:#f8fafc;
+  text-align:center;
+  font-size:24px;
+  font-weight:bold;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+td{
+  padding:9px 4px;
+  border-bottom:1px solid #e5e7eb;
+}
+canvas{
+  width:100%;
+  height:260px;
+  background:#0f172a;
+  border-radius:10px;
+}
+small{color:#64748b}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+}
 </style>
 </head>
+
 <body>
+
+<header>
+  <h1>Trading Assistant</h1>
+  <p>Analisi tecnica automatica · Dati reali di mercato</p>
+</header>
+
 <main>
-<div class="top"><div class="brand">Trading Assistant</div><div class="badge">DEMO</div></div>
 
-<section class="card">
-<strong>Analisi tecnica</strong>
-<div class="muted" style="margin:4px 0 13px">Prototipo offline. Nessun ordine reale viene inviato.</div>
-<div class="grid">
-<div><label>Coppia</label><select id="pair"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option></select></div>
-<div><label>Timeframe</label><select id="tf"><option>5 minuti</option><option>15 minuti</option><option>1 ora</option></select></div>
-<div><label>Prezzo</label><input id="price" type="number" step="0.00001" value="1.17500"></div>
-<div><label>EMA 20</label><input id="e20" type="number" step="0.00001" value="1.17400"></div>
-<div><label>EMA 50</label><input id="e50" type="number" step="0.00001" value="1.17200"></div>
-<div><label>RSI 14</label><input id="rsi" type="number" min="0" max="100" step="0.1" value="58"></div>
-<div><label>MACD</label><input id="macd" type="number" step="0.00001" value="0.00120"></div>
-<div><label>Segnale MACD</label><input id="msig" type="number" step="0.00001" value="0.00070"></div>
-<div><label>Supporto</label><input id="sup" type="number" step="0.00001" value="1.17100"></div>
-<div><label>Resistenza</label><input id="res" type="number" step="0.00001" value="1.17800"></div>
-<div><label>Capitale (€)</label><input id="cap" type="number" min="1" step="1" value="100"></div>
-<div><label>Rischio (%)</label><input id="risk" type="number" min="0.1" max="5" step="0.1" value="1"></div>
+<div class="card">
+  <h2>Mercato</h2>
+
+  <span id="status" class="status">Pronto</span>
+
+  <div class="grid">
+    <div>
+      <label>Coppia</label>
+      <select id="pair">
+        <option value="EUR/USD">EUR/USD</option>
+        <option value="GBP/USD">GBP/USD</option>
+        <option value="USD/JPY">USD/JPY</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Timeframe</label>
+      <select id="interval">
+        <option value="5min">5 minuti</option>
+        <option value="15min">15 minuti</option>
+        <option value="1h">1 ora</option>
+      </select>
+    </div>
+  </div>
+
+  <br>
+
+  <label>API key Twelve Data</label>
+  <input id="apiKey" type="password" placeholder="Inserisci la tua API key">
+
+  <br><br>
+
+  <div class="grid">
+    <button onclick="loadMarket()">Carica mercato</button>
+    <button class="secondary" onclick="demo()">Usa dati demo</button>
+  </div>
+
+  <br>
+  <small>
+    La chiave viene salvata solamente nel browser. Il sistema non invia ordini al broker.
+  </small>
 </div>
-<div class="actions"><button id="analyze">Analizza</button><button class="secondary" id="demo">Ripristina demo</button></div>
-</section>
 
-<section class="stats">
-<div class="stat"><div class="label">Segnale</div><div id="signal" class="big">—</div></div>
-<div class="stat"><div class="label">Punteggio</div><div id="score" class="big">—</div></div>
-<div class="stat"><div class="label">Rischio massimo</div><div id="riskE" class="big">—</div></div>
-<div class="stat"><div class="label">R:R</div><div class="big">1 : 2</div></div>
-</section>
+<div class="card">
+  <h2>Grafico</h2>
+  <canvas id="chart"></canvas>
+</div>
 
-<section class="card">
-<strong>Livelli</strong>
-<div class="row"><span>Prezzo</span><b id="pv">—</b></div>
-<div class="row"><span>Stop Loss</span><b id="sl">—</b></div>
-<div class="row"><span>Take Profit</span><b id="tp">—</b></div>
-</section>
+<div class="card">
+  <h2>Analisi tecnica</h2>
 
-<section class="card">
-<strong>Schema</strong>
-<svg viewBox="0 0 700 210" aria-label="Schema tecnico">
-<line x1="50" y1="25" x2="680" y2="25" stroke="#d1d5db"/>
-<line x1="50" y1="180" x2="680" y2="180" stroke="#d1d5db"/>
-<polyline points="50,150 120,130 190,142 260,100 330,116 400,78 470,91 540,58 680,70" fill="none" stroke="#374151" stroke-width="3"/>
-<line id="slLine" x1="50" y1="145" x2="680" y2="145" stroke="#b42318" stroke-dasharray="7 5"/>
-<line id="tpLine" x1="50" y1="55" x2="680" y2="55" stroke="#087443" stroke-dasharray="7 5"/>
-</svg>
-</section>
+  <table>
+    <tr><td>Prezzo</td><td id="price">—</td></tr>
+    <tr><td>EMA 20</td><td id="ema20">—</td></tr>
+    <tr><td>EMA 50</td><td id="ema50">—</td></tr>
+    <tr><td>RSI 14</td><td id="rsi">—</td></tr>
+    <tr><td>MACD</td><td id="macd">—</td></tr>
+    <tr><td>MACD Signal</td><td id="macdSignal">—</td></tr>
+    <tr><td>ATR 14</td><td id="atr">—</td></tr>
+    <tr><td>Supporto</td><td id="support">—</td></tr>
+    <tr><td>Resistenza</td><td id="resistance">—</td></tr>
+  </table>
+</div>
 
-<section class="card">
-<strong>Perché questo segnale?</strong>
-<div id="reason" class="muted" style="margin-top:6px">Premi Analizza.</div>
-</section>
+<div class="card">
+  <h2>Segnale</h2>
+  <div id="signal" class="signal">ATTENDI</div>
 
-<section class="card">
-<strong>Registro demo</strong>
-<div class="actions"><button id="log">Registra segnale</button><button class="secondary" id="clear">Cancella</button></div>
-<div id="journal" class="muted" style="margin-top:8px">Nessun segnale registrato.</div>
-</section>
+  <br>
 
-<section class="card">
-<strong>Prossimo sviluppo</strong>
-<small style="margin-top:6px">Questa versione è volutamente offline. Il passo successivo è aggiungere un backend/API per dati reali e, separatamente, l'integrazione con MT5. Prima dell'uso con denaro reale va testata con dati storici e conto demo.</small>
-</section>
+  <table>
+    <tr><td>Stop Loss</td><td id="sl">—</td></tr>
+    <tr><td>Take Profit</td><td id="tp">—</td></tr>
+  </table>
+
+  <br>
+  <small>
+    Filtro tecnico didattico: non è una previsione garantita e non costituisce consulenza finanziaria.
+  </small>
+</div>
+
+<div class="card">
+  <h2>Gestione capitale</h2>
+
+  <div class="grid">
+    <div>
+      <label>Capitale (€)</label>
+      <input id="capital" type="number" value="1000">
+    </div>
+
+    <div>
+      <label>Rischio (%)</label>
+      <input id="risk" type="number" value="1" step="0.1">
+    </div>
+  </div>
+
+  <br>
+
+  <button onclick="analyze()">Aggiorna analisi</button>
+</div>
+
 </main>
+
 <script>
-(() => {
- const $=id=>document.getElementById(id), n=id=>Number($(id).value);
- let logs=[];
- function analyze(){
-  const p=n('price'),e20=n('e20'),e50=n('e50'),rs=n('rsi'),m=n('macd'),ms=n('msig'),s=n('sup'),re=n('res'),c=n('cap'),rk=n('risk');
-  if(![p,e20,e50,rs,m,ms,s,re,c,rk].every(Number.isFinite)||p<=0||c<=0||rk<=0||rs<0||rs>100||s>=re){
-   $('reason').textContent='Controlla i valori inseriti.'; return;
+
+let candles = [];
+
+const $ = id => document.getElementById(id);
+
+const savedKey = localStorage.getItem("td_key");
+if(savedKey) $("apiKey").value = savedKey;
+
+function setStatus(text,type=""){
+  $("status").textContent=text;
+  $("status").className="status "+type;
+}
+
+function ema(values, period){
+  if(values.length < period) return null;
+
+  const k=2/(period+1);
+  let result=values.slice(0,period)
+    .reduce((a,b)=>a+b,0)/period;
+
+  for(let i=period;i<values.length;i++){
+    result=values[i]*k+result*(1-k);
   }
-  let score=0,why=[];
-  if(p>e20){score++;why.push('prezzo sopra EMA20')}else{score--;why.push('prezzo sotto EMA20')}
-  if(e20>e50){score++;why.push('EMA20 sopra EMA50')}else{score--;why.push('EMA20 sotto EMA50')}
-  if(rs>=50&&rs<70){score++;why.push('RSI favorevole')}else if(rs>=70){score--;why.push('RSI alto')}else{score--;why.push('RSI sotto 50')}
-  if(m>ms){score++;why.push('MACD sopra il segnale')}else{score--;why.push('MACD sotto il segnale')}
-  const sig=score>=3?'POSSIBILE LONG':score<=-3?'POSSIBILE SHORT':'ATTENDI';
-  const dist=Math.max(Math.abs(p-s),Math.abs(re-p));
-  const sl=sig.includes('LONG')?p-dist:sig.includes('SHORT')?p+dist:null;
-  const tp=sig.includes('LONG')?p+dist*2:sig.includes('SHORT')?p-dist*2:null;
-  $('signal').textContent=sig;$('score').textContent=(score>0?'+':'')+score+' / 4';
-  $('riskE').textContent='€ '+(c*rk/100).toFixed(2);$('pv').textContent=p.toFixed(5);
-  $('sl').textContent=sl===null?'—':sl.toFixed(5);$('tp').textContent=tp===null?'—':tp.toFixed(5);
-  $('reason').textContent=why.join(' · ')+'. Filtro tecnico didattico, non previsione garantita.';
- }
- function demo(){
-  const vals={price:'1.17500',e20:'1.17400',e50:'1.17200',rsi:'58',macd:'0.00120',msig:'0.00070',sup:'1.17100',res:'1.17800',cap:'100',risk:'1'};
-  Object.entries(vals).forEach(([k,v])=>$(k).value=v);analyze();
- }
- function render(){ $('journal').textContent=logs.length?logs.join(' | '):'Nessun segnale registrato.'; }
- $('analyze').onclick=analyze;$('demo').onclick=demo;
- $('log').onclick=()=>{analyze();logs.push($('pair').value+' '+$('tf').value+' — '+$('signal').textContent+' — '+$('pv').textContent);render();};
- $('clear').onclick=()=>{logs=[];render();};
- analyze();
- if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
-})();
+
+  return result;
+}
+
+function emaSeries(values,period){
+  if(values.length<period) return [];
+
+  const k=2/(period+1);
+  let e=values.slice(0,period)
+    .reduce((a,b)=>a+b,0)/period;
+
+  const result=new Array(period-1).fill(null);
+  result.push(e);
+
+  for(let i=period;i<values.length;i++){
+    e=values[i]*k+e*(1-k);
+    result.push(e);
+  }
+
+  return result;
+}
+
+function rsi(values,period=14){
+  if(values.length<=period) return null;
+
+  let gains=0;
+  let losses=0;
+
+  for(let i=1;i<=period;i++){
+    const d=values[i]-values[i-1];
+    if(d>=0) gains+=d;
+    else losses-=d;
+  }
+
+  let avgGain=gains/period;
+  let avgLoss=losses/period;
+
+  for(let i=period+1;i<values.length;i++){
+    const d=values[i]-values[i-1];
+    const gain=Math.max(d,0);
+    const loss=Math.max(-d,0);
+
+    avgGain=((avgGain*(period-1))+gain)/period;
+    avgLoss=((avgLoss*(period-1))+loss)/period;
+  }
+
+  if(avgLoss===0) return 100;
+
+  const rs=avgGain/avgLoss;
+  return 100-(100/(1+rs));
+}
+
+function atr(data,period=14){
+  if(data.length<=period) return null;
+
+  const tr=[];
+
+  for(let i=1;i<data.length;i++){
+    const high=data[i].high;
+    const low=data[i].low;
+    const prev=data[i-1].close;
+
+    tr.push(
+      Math.max(
+        high-low,
+        Math.abs(high-prev),
+        Math.abs(low-prev)
+      )
+    );
+  }
+
+  return tr.slice(-period)
+    .reduce((a,b)=>a+b,0)/period;
+}
+
+function format(n){
+  if(n===null || n===undefined || !Number.isFinite(n)) return "—";
+  return Number(n).toFixed(5);
+}
+
+function calculateFromCandles(){
+
+  if(candles.length<60) return;
+
+  const closes=candles.map(x=>x.close);
+
+  const price=closes[closes.length-1];
+
+  const e20=ema(closes,20);
+  const e50=ema(closes,50);
+  const r=rsi(closes,14);
+
+  const fast=emaSeries(closes,12);
+  const slow=emaSeries(closes,26);
+
+  const macdSeries=[];
+
+  for(let i=0;i<closes.length;i++){
+    if(fast[i]!==null && slow[i]!==null){
+      macdSeries.push(fast[i]-slow[i]);
+    }
+  }
+
+  const macd=macdSeries[macdSeries.length-1];
+
+  const macdSignal=ema(macdSeries,9);
+
+  const a=atr(candles,14);
+
+  const recent=candles.slice(-50);
+
+  const support=Math.min(...recent.map(x=>x.low));
+  const resistance=Math.max(...recent.map(x=>x.high));
+
+  $("price").textContent=format(price);
+  $("ema20").textContent=format(e20);
+  $("ema50").textContent=format(e50);
+  $("rsi").textContent=r===null?"—":r.toFixed(2);
+  $("macd").textContent=format(macd);
+  $("macdSignal").textContent=format(macdSignal);
+  $("atr").textContent=format(a);
+  $("support").textContent=format(support);
+  $("resistance").textContent=format(resistance);
+
+  let score=0;
+
+  if(price>e20) score++;
+  else score--;
+
+  if(e20>e50) score++;
+  else score--;
+
+  if(r>=50 && r<=70) score++;
+  else if(r<40) score--;
+
+  if(macd>macdSignal) score++;
+  else score--;
+
+  let signal="ATTENDI";
+
+  if(score>=3) signal="POSSIBILE LONG";
+  else if(score<=-3) signal="POSSIBILE SHORT";
+
+  $("signal").textContent=signal;
+
+  let sl,tp;
+
+  if(signal==="POSSIBILE LONG"){
+    sl=Math.min(support,price-a*1.5);
+    const riskDistance=price-sl;
+    tp=price+riskDistance*2;
+  }
+
+  if(signal==="POSSIBILE SHORT"){
+    sl=Math.max(resistance,price+a*1.5);
+    const riskDistance=sl-price;
+    tp=price-riskDistance*2;
+  }
+
+  $("sl").textContent=sl?format(sl):"—";
+  $("tp").textContent=tp?format(tp):"—";
+
+  drawChart(candles);
+}
+
+async function loadMarket(){
+
+  const key=$("apiKey").value.trim();
+
+  if(!key){
+    setStatus("Inserisci la API key","error");
+    return;
+  }
+
+  localStorage.setItem("td_key",key);
+
+  setStatus("Caricamento dati reali...");
+
+  const symbol=$("pair").value;
+  const interval=$("interval").value;
+
+  const url=
+    "https://api.twelvedata.com/time_series"+
+    "?symbol="+encodeURIComponent(symbol)+
+    "&interval="+encodeURIComponent(interval)+
+    "&outputsize=120"+
+    "&apikey="+encodeURIComponent(key);
+
+  try{
+
+    const response=await fetch(url);
+    const data=await response.json();
+
+    if(data.status==="error" || !data.values){
+      throw new Error(data.message || "Errore API");
+    }
+
+    candles=data.values.reverse().map(x=>({
+      open:Number(x.open),
+      high:Number(x.high),
+      low:Number(x.low),
+      close:Number(x.close)
+    }));
+
+    setStatus(
+      "Dati reali caricati · "+candles.length+" candele",
+      "ok"
+    );
+
+    calculateFromCandles();
+
+  }catch(error){
+
+    console.error(error);
+
+    setStatus(
+      "Errore: "+error.message,
+      "error"
+    );
+  }
+}
+
+function analyze(){
+
+  if(candles.length){
+    calculateFromCandles();
+  }
+}
+
+function demo(){
+
+  candles=[];
+
+  let price=1.10;
+
+  for(let i=0;i<120;i++){
+
+    const change=(Math.random()-0.48)*0.004;
+
+    const open=price;
+
+    price+=change;
+
+    const close=price;
+
+    const high=Math.max(open,close)+Math.random()*0.002;
+    const low=Math.min(open,close)-Math.random()*0.002;
+
+    candles.push({
+      open,
+      high,
+      low,
+      close
+    });
+  }
+
+  setStatus("Modalità demo");
+
+  calculateFromCandles();
+}
+
+function drawChart(data){
+
+  const canvas=$("chart");
+  const ctx=canvas.getContext("2d");
+
+  const width=canvas.clientWidth;
+  const height=canvas.clientHeight;
+
+  const dpr=window.devicePixelRatio||1;
+
+  canvas.width=width*dpr;
+  canvas.height=height*dpr;
+
+  ctx.scale(dpr,dpr);
+
+  ctx.clearRect(0,0,width,height);
+
+  if(!data.length)return;
+
+  const values=data.map(x=>x.close);
+
+  const min=Math.min(...values);
+  const max=Math.max(...values);
+
+  const pad=20;
+
+  ctx.beginPath();
+
+  values.forEach((v,i)=>{
+
+    const x=
+      pad+
+      i*(width-pad*2)/(values.length-1);
+
+    const y=
+      height-pad-
+      ((v-min)/(max-min))*(height-pad*2);
+
+    if(i===0)ctx.moveTo(x,y);
+    else ctx.lineTo(x,y);
+
+  });
+
+  ctx.strokeStyle="#60a5fa";
+  ctx.lineWidth=2;
+  ctx.stroke();
+}
+
+window.addEventListener("resize",()=>{
+  if(candles.length) drawChart(candles);
+});
+
 </script>
+
 </body>
 </html>
