@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Trading Assistant</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fa;color:#111827}
+main{max-width:760px;margin:auto;padding:18px 14px 36px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.brand{font-size:22px;font-weight:800}.badge{font-size:12px;padding:6px 9px;border-radius:999px;background:#e5e7eb}
+.card{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:15px;margin-bottom:12px}.muted{color:#6b7280;font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}}
+label{display:block;font-size:12px;color:#6b7280;margin-bottom:5px}input,select,button{width:100%;min-height:44px;border-radius:11px;border:1px solid #d1d5db;padding:9px 10px;font-size:16px;background:white;color:#111827}button{border:0;background:#111827;color:white;font-weight:700;cursor:pointer}.secondary{background:#eef2f7;color:#111827}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.actions button{width:auto;padding:9px 14px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:white;border:1px solid #e5e7eb;border-radius:16px;padding:14px}.label{font-size:12px;color:#6b7280}.big{font-size:21px;font-weight:800;margin-top:3px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #eee}.row:last-child{border-bottom:0}
+svg{width:100%;height:210px;background:#fafafa;border:1px solid #e5e7eb;border-radius:12px}
+#reason{line-height:1.5}.danger{color:#b42318}.ok{color:#087443}
+small{color:#6b7280;line-height:1.45;display:block}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><div class="brand">Trading Assistant</div><div class="badge">DEMO</div></div>
+
+<section class="card">
+<strong>Analisi tecnica</strong>
+<div class="muted" style="margin:4px 0 13px">Prototipo offline. Nessun ordine reale viene inviato.</div>
+<div class="grid">
+<div><label>Coppia</label><select id="pair"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option></select></div>
+<div><label>Timeframe</label><select id="tf"><option>5 minuti</option><option>15 minuti</option><option>1 ora</option></select></div>
+<div><label>Prezzo</label><input id="price" type="number" step="0.00001" value="1.17500"></div>
+<div><label>EMA 20</label><input id="e20" type="number" step="0.00001" value="1.17400"></div>
+<div><label>EMA 50</label><input id="e50" type="number" step="0.00001" value="1.17200"></div>
+<div><label>RSI 14</label><input id="rsi" type="number" min="0" max="100" step="0.1" value="58"></div>
+<div><label>MACD</label><input id="macd" type="number" step="0.00001" value="0.00120"></div>
+<div><label>Segnale MACD</label><input id="msig" type="number" step="0.00001" value="0.00070"></div>
+<div><label>Supporto</label><input id="sup" type="number" step="0.00001" value="1.17100"></div>
+<div><label>Resistenza</label><input id="res" type="number" step="0.00001" value="1.17800"></div>
+<div><label>Capitale (€)</label><input id="cap" type="number" min="1" step="1" value="100"></div>
+<div><label>Rischio (%)</label><input id="risk" type="number" min="0.1" max="5" step="0.1" value="1"></div>
+</div>
+<div class="actions"><button id="analyze">Analizza</button><button class="secondary" id="demo">Ripristina demo</button></div>
+</section>
+
+<section class="stats">
+<div class="stat"><div class="label">Segnale</div><div id="signal" class="big">—</div></div>
+<div class="stat"><div class="label">Punteggio</div><div id="score" class="big">—</div></div>
+<div class="stat"><div class="label">Rischio massimo</div><div id="riskE" class="big">—</div></div>
+<div class="stat"><div class="label">R:R</div><div class="big">1 : 2</div></div>
+</section>
+
+<section class="card">
+<strong>Livelli</strong>
+<div class="row"><span>Prezzo</span><b id="pv">—</b></div>
+<div class="row"><span>Stop Loss</span><b id="sl">—</b></div>
+<div class="row"><span>Take Profit</span><b id="tp">—</b></div>
+</section>
+
+<section class="card">
+<strong>Schema</strong>
+<svg viewBox="0 0 700 210" aria-label="Schema tecnico">
+<line x1="50" y1="25" x2="680" y2="25" stroke="#d1d5db"/>
+<line x1="50" y1="180" x2="680" y2="180" stroke="#d1d5db"/>
+<polyline points="50,150 120,130 190,142 260,100 330,116 400,78 470,91 540,58 680,70" fill="none" stroke="#374151" stroke-width="3"/>
+<line id="slLine" x1="50" y1="145" x2="680" y2="145" stroke="#b42318" stroke-dasharray="7 5"/>
+<line id="tpLine" x1="50" y1="55" x2="680" y2="55" stroke="#087443" stroke-dasharray="7 5"/>
+</svg>
+</section>
+
+<section class="card">
+<strong>Perché questo segnale?</strong>
+<div id="reason" class="muted" style="margin-top:6px">Premi Analizza.</div>
+</section>
+
+<section class="card">
+<strong>Registro demo</strong>
+<div class="actions"><button id="log">Registra segnale</button><button class="secondary" id="clear">Cancella</button></div>
+<div id="journal" class="muted" style="margin-top:8px">Nessun segnale registrato.</div>
+</section>
+
+<section class="card">
+<strong>Prossimo sviluppo</strong>
+<small style="margin-top:6px">Questa versione è volutamente offline. Il passo successivo è aggiungere un backend/API per dati reali e, separatamente, l'integrazione con MT5. Prima dell'uso con denaro reale va testata con dati storici e conto demo.</small>
+</section>
+</main>
+<script>
+(() => {
+ const $=id=>document.getElementById(id), n=id=>Number($(id).value);
+ let logs=[];
+ function analyze(){
+  const p=n('price'),e20=n('e20'),e50=n('e50'),rs=n('rsi'),m=n('macd'),ms=n('msig'),s=n('sup'),re=n('res'),c=n('cap'),rk=n('risk');
+  if(![p,e20,e50,rs,m,ms,s,re,c,rk].every(Number.isFinite)||p<=0||c<=0||rk<=0||rs<0||rs>100||s>=re){
+   $('reason').textContent='Controlla i valori inseriti.'; return;
+  }
+  let score=0,why=[];
+  if(p>e20){score++;why.push('prezzo sopra EMA20')}else{score--;why.push('prezzo sotto EMA20')}
+  if(e20>e50){score++;why.push('EMA20 sopra EMA50')}else{score--;why.push('EMA20 sotto EMA50')}
+  if(rs>=50&&rs<70){score++;why.push('RSI favorevole')}else if(rs>=70){score--;why.push('RSI alto')}else{score--;why.push('RSI sotto 50')}
+  if(m>ms){score++;why.push('MACD sopra il segnale')}else{score--;why.push('MACD sotto il segnale')}
+  const sig=score>=3?'POSSIBILE LONG':score<=-3?'POSSIBILE SHORT':'ATTENDI';
+  const dist=Math.max(Math.abs(p-s),Math.abs(re-p));
+  const sl=sig.includes('LONG')?p-dist:sig.includes('SHORT')?p+dist:null;
+  const tp=sig.includes('LONG')?p+dist*2:sig.includes('SHORT')?p-dist*2:null;
+  $('signal').textContent=sig;$('score').textContent=(score>0?'+':'')+score+' / 4';
+  $('riskE').textContent='€ '+(c*rk/100).toFixed(2);$('pv').textContent=p.toFixed(5);
+  $('sl').textContent=sl===null?'—':sl.toFixed(5);$('tp').textContent=tp===null?'—':tp.toFixed(5);
+  $('reason').textContent=why.join(' · ')+'. Filtro tecnico didattico, non previsione garantita.';
+ }
+ function demo(){
+  const vals={price:'1.17500',e20:'1.17400',e50:'1.17200',rsi:'58',macd:'0.00120',msig:'0.00070',sup:'1.17100',res:'1.17800',cap:'100',risk:'1'};
+  Object.entries(vals).forEach(([k,v])=>$(k).value=v);analyze();
+ }
+ function render(){ $('journal').textContent=logs.length?logs.join(' | '):'Nessun segnale registrato.'; }
+ $('analyze').onclick=analyze;$('demo').onclick=demo;
+ $('log').onclick=()=>{analyze();logs.push($('pair').value+' '+$('tf').value+' — '+$('signal').textContent+' — '+$('pv').textContent);render();};
+ $('clear').onclick=()=>{logs=[];render();};
+ analyze();
+ if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
