@@ -355,46 +355,56 @@ function calculateFromCandles(){
   $("atr").textContent=format(a);
   $("support").textContent=format(support);
   $("resistance").textContent=format(resistance);
+let longScore=0;
+let shortScore=0;
 
-  let score=0;
+if(price>e20) longScore++;
+if(price<e20) shortScore++;
 
-  if(price>e20) score++;
-  else score--;
+if(e20>e50) longScore++;
+if(e20<e50) shortScore++;
 
-  if(e20>e50) score++;
-  else score--;
+if(r>=50 && r<=70) longScore++;
+if(r>=30 && r<=50) shortScore++;
 
-  if(r>=50 && r<=70) score++;
-  else if(r<40) score--;
+if(macd>macdSignal) longScore++;
+if(macd<macdSignal) shortScore++;
 
-  if(macd>macdSignal) score++;
-  else score--;
+let signal="ATTENDI";
 
-  let signal="ATTENDI";
+// Segnale solo con 4 conferme su 4.
+// Evita inoltre LONG in ipercomprato e SHORT in ipervenduto.
+if(longScore===4 && r<70){
+  signal="POSSIBILE LONG";
+}
+else if(shortScore===4 && r>30){
+  signal="POSSIBILE SHORT";
+}
 
-  if(score>=3) signal="POSSIBILE LONG";
-  else if(score<=-3) signal="POSSIBILE SHORT";
+$("signal").textContent=signal;
 
-  $("signal").textContent=signal;
+let sl,tp1,tp2,tp3;
 
-  let sl,tp;
+if(signal==="POSSIBILE LONG"){
+  sl=Math.min(support,price-a*1.5);
+  const riskDistance=price-sl;
 
-  if(signal==="POSSIBILE LONG"){
-    sl=Math.min(support,price-a*1.5);
-    const riskDistance=price-sl;
-    tp=price+riskDistance*2;
-  }
+  tp1=price+riskDistance*1;
+  tp2=price+riskDistance*1.5;
+  tp3=price+riskDistance*2;
+}
 
-  if(signal==="POSSIBILE SHORT"){
-    sl=Math.max(resistance,price+a*1.5);
-    const riskDistance=sl-price;
-    tp=price-riskDistance*2;
-  }
+if(signal==="POSSIBILE SHORT"){
+  sl=Math.max(resistance,price+a*1.5);
+  const riskDistance=sl-price;
 
-  $("sl").textContent=sl?format(sl):"—";
-  $("tp").textContent=tp?format(tp):"—";
+  tp1=price-riskDistance*1;
+  tp2=price-riskDistance*1.5;
+  tp3=price-riskDistance*2;
+}
 
-  drawChart(candles);
+$("sl").textContent=sl?format(sl):"—";
+$("tp").textContent=tp1?format(tp1):"—";
 }
 
 async function loadMarket(){
