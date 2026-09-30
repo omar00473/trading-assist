@@ -383,28 +383,60 @@ else if(shortScore===4 && r>30){
 
 $("signal").textContent=signal;
 
+
 let sl,tp1,tp2,tp3;
 
 if(signal==="POSSIBILE LONG"){
   sl=Math.min(support,price-a*1.5);
   const riskDistance=price-sl;
 
-  tp1=price+riskDistance*1;
-  tp2=price+riskDistance*1.5;
-  tp3=price+riskDistance*2;
+  // Obiettivi ravvicinati basati sulla volatilità
+  tp1=price+a*0.5;
+  tp2=price+a*0.8;
+  tp3=price+a*1.1;
+
+  // Evita segnali con rapporto rischio/rendimento troppo basso
+  if(!Number.isFinite(riskDistance) ||
+     riskDistance<=0 ||
+     (tp1-price)/riskDistance<0.5){
+    signal="ATTENDI";
+  }
 }
 
 if(signal==="POSSIBILE SHORT"){
   sl=Math.max(resistance,price+a*1.5);
   const riskDistance=sl-price;
 
-  tp1=price-riskDistance*1;
-  tp2=price-riskDistance*1.5;
-  tp3=price-riskDistance*2;
+  // Obiettivi ravvicinati basati sulla volatilità
+  tp1=price-a*0.5;
+  tp2=price-a*0.8;
+  tp3=price-a*1.1;
+
+  // Evita segnali con rapporto rischio/rendimento troppo basso
+  if(!Number.isFinite(riskDistance) ||
+     riskDistance<=0 ||
+     (price-tp1)/riskDistance<0.5){
+    signal="ATTENDI";
+  }
 }
 
-$("sl").textContent=sl?format(sl):"—";
-$("tp").textContent=tp1?format(tp1):"—";
+$("signal").textContent=signal;
+
+if(signal==="POSSIBILE LONG" ||
+   signal==="POSSIBILE SHORT"){
+
+  $("sl").textContent=format(sl);
+
+  $("tp").textContent=
+    "TP1: "+format(tp1)+"\n"+
+    "TP2: "+format(tp2)+"\n"+
+    "TP3: "+format(tp3);
+
+}else{
+  $("sl").textContent="—";
+  $("tp").textContent="—";
+}
+
 }
 
 async function loadMarket(){
