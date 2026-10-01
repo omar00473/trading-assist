@@ -218,7 +218,8 @@ small{color:#64748b}
 <script>
 
 let candles = [];
-
+let lastSignalCandle = null;
+let lastSignal = "ATTENDI";
 const $ = id => document.getElementById(id);
 
 const savedKey = localStorage.getItem("td_key");
