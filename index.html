@@ -89,10 +89,12 @@ canvas{
   border-radius:10px;
 }
 small{color:#64748b}
-#tp {
-  white-space: pre-line;
-  line-height: 1.8;
+
+#tp{
+  white-space:pre-line;
+  line-height:1.8;
 }
+
 @media(max-width:600px){
   .grid{grid-template-columns:1fr}
 }
@@ -114,8 +116,10 @@ small{color:#64748b}
   <span id="status" class="status">Pronto</span>
 
   <div class="grid">
+
     <div>
       <label>Coppia</label>
+
       <select id="pair">
         <option value="EUR/USD">EUR/USD</option>
         <option value="GBP/USD">GBP/USD</option>
@@ -126,18 +130,24 @@ small{color:#64748b}
 
     <div>
       <label>Timeframe</label>
+
       <select id="interval">
         <option value="5min">5 minuti</option>
         <option value="15min">15 minuti</option>
         <option value="1h">1 ora</option>
       </select>
     </div>
+
   </div>
 
   <br>
 
   <label>API key Twelve Data</label>
-  <input id="apiKey" type="password" placeholder="Inserisci la tua API key">
+  <input
+    id="apiKey"
+    type="password"
+    placeholder="Inserisci la tua API key"
+  >
 
   <br><br>
 
@@ -147,160 +157,338 @@ small{color:#64748b}
   </div>
 
   <br>
+
   <small>
-    La chiave viene salvata solamente nel browser. Il sistema non invia ordini al broker.
+    La chiave viene salvata solamente nel browser.
+    Il sistema non invia ordini al broker.
   </small>
+
 </div>
 
+
 <div class="card">
+
   <h2>Grafico</h2>
+
   <canvas id="chart"></canvas>
+
 </div>
 
+
 <div class="card">
+
   <h2>Analisi tecnica</h2>
 
   <table>
-    <tr><td>Prezzo</td><td id="price">—</td></tr>
-    <tr><td>EMA 20</td><td id="ema20">—</td></tr>
-    <tr><td>EMA 50</td><td id="ema50">—</td></tr>
-    <tr><td>RSI 14</td><td id="rsi">—</td></tr>
-    <tr><td>MACD</td><td id="macd">—</td></tr>
-    <tr><td>MACD Signal</td><td id="macdSignal">—</td></tr>
-    <tr><td>ATR 14</td><td id="atr">—</td></tr>
-    <tr><td>Supporto</td><td id="support">—</td></tr>
-    <tr><td>Resistenza</td><td id="resistance">—</td></tr>
+
+    <tr>
+      <td>Prezzo</td>
+      <td id="price">—</td>
+    </tr>
+
+    <tr>
+      <td>EMA 20</td>
+      <td id="ema20">—</td>
+    </tr>
+
+    <tr>
+      <td>EMA 50</td>
+      <td id="ema50">—</td>
+    </tr>
+
+    <tr>
+      <td>RSI 14</td>
+      <td id="rsi">—</td>
+    </tr>
+
+    <tr>
+      <td>MACD</td>
+      <td id="macd">—</td>
+    </tr>
+
+    <tr>
+      <td>MACD Signal</td>
+      <td id="macdSignal">—</td>
+    </tr>
+
+    <tr>
+      <td>ATR 14</td>
+      <td id="atr">—</td>
+    </tr>
+
+    <tr>
+      <td>Supporto</td>
+      <td id="support">—</td>
+    </tr>
+
+    <tr>
+      <td>Resistenza</td>
+      <td id="resistance">—</td>
+    </tr>
+
   </table>
+
 </div>
 
+
 <div class="card">
+
   <h2>Segnale</h2>
-  <div id="signal" class="signal">ATTENDI</div>
-<div style="text-align:center;margin-top:10px;">
-  <strong>Punteggio:</strong>
-  <span id="score">—</span>
-</div>
-  <br>
 
-  <table>
-    <tr><td>Stop Loss</td><td id="sl">—</td></tr>
-    <tr><td>Take Profit</td><td id="tp">—</td></tr>
-  </table>
+  <div id="signal" class="signal">
+    ATTENDI
+  </div>
 
-  <br>
-  <small>
-    Filtro tecnico didattico: non è una previsione garantita e non costituisce consulenza finanziaria.
-  </small>
-</div>
-
-<div class="card">
-  <h2>Gestione capitale</h2>
-
-  <div class="grid">
-    <div>
-      <label>Capitale (€)</label>
-      <input id="capital" type="number" value="1000">
-    </div>
-
-    <div>
-      <label>Rischio (%)</label>
-      <input id="risk" type="number" value="1" step="0.1">
-    </div>
+  <div style="text-align:center;margin-top:10px;">
+    <strong>Punteggio:</strong>
+    <span id="score">—</span>
   </div>
 
   <br>
 
-  <button onclick="analyze()">Aggiorna analisi</button>
+  <table>
+
+    <tr>
+      <td>Stop Loss</td>
+      <td id="sl">—</td>
+    </tr>
+
+    <tr>
+      <td>Take Profit</td>
+      <td id="tp">—</td>
+    </tr>
+
+  </table>
+
+  <br>
+
+  <small>
+    Filtro tecnico didattico: non è una previsione garantita
+    e non costituisce consulenza finanziaria.
+  </small>
+
+</div>
+
+
+<div class="card">
+
+  <h2>Gestione capitale</h2>
+
+  <div class="grid">
+
+    <div>
+      <label>Capitale (€)</label>
+      <input
+        id="capital"
+        type="number"
+        value="1000"
+      >
+    </div>
+
+    <div>
+      <label>Rischio (%)</label>
+      <input
+        id="risk"
+        type="number"
+        value="1"
+        step="0.1"
+      >
+    </div>
+
+  </div>
+
+  <br>
+
+  <button onclick="analyze()">
+    Aggiorna analisi
+  </button>
+
 </div>
 
 </main>
 
+
 <script>
 
 let candles = [];
+
 let lastSignalCandle = null;
 let lastSignal = "ATTENDI";
+
 const $ = id => document.getElementById(id);
 
-const savedKey = localStorage.getItem("td_key");
-if(savedKey) $("apiKey").value = savedKey;
 
-function setStatus(text,type=""){
-  $("status").textContent=text;
-  $("status").className="status "+type;
+/* =========================
+   API KEY SALVATA
+   ========================= */
+
+const savedKey = localStorage.getItem("td_key");
+
+if(savedKey){
+  $("apiKey").value = savedKey;
 }
 
-function ema(values, period){
-  if(values.length < period) return null;
 
-  const k=2/(period+1);
-  let result=values.slice(0,period)
-    .reduce((a,b)=>a+b,0)/period;
+/* =========================
+   STATO
+   ========================= */
+
+function setStatus(text,type=""){
+
+  $("status").textContent = text;
+
+  $("status").className =
+    "status " + type;
+}
+
+
+/* =========================
+   EMA
+   ========================= */
+
+function ema(values,period){
+
+  if(values.length < period)
+    return null;
+
+  const k = 2/(period+1);
+
+  let result =
+    values
+      .slice(0,period)
+      .reduce((a,b)=>a+b,0)
+      / period;
 
   for(let i=period;i<values.length;i++){
-    result=values[i]*k+result*(1-k);
+
+    result =
+      values[i]*k +
+      result*(1-k);
   }
 
   return result;
 }
 
+
+/* =========================
+   EMA SERIES
+   ========================= */
+
 function emaSeries(values,period){
-  if(values.length<period) return [];
 
-  const k=2/(period+1);
-  let e=values.slice(0,period)
-    .reduce((a,b)=>a+b,0)/period;
+  if(values.length < period)
+    return [];
 
-  const result=new Array(period-1).fill(null);
+  const k = 2/(period+1);
+
+  let e =
+    values
+      .slice(0,period)
+      .reduce((a,b)=>a+b,0)
+      / period;
+
+  const result =
+    new Array(period-1).fill(null);
+
   result.push(e);
 
   for(let i=period;i<values.length;i++){
-    e=values[i]*k+e*(1-k);
+
+    e =
+      values[i]*k +
+      e*(1-k);
+
     result.push(e);
   }
 
   return result;
 }
 
-function rsi(values,period=14){
-  if(values.length<=period) return null;
 
-  let gains=0;
-  let losses=0;
+/* =========================
+   RSI
+   ========================= */
+
+function rsi(values,period=14){
+
+  if(values.length <= period)
+    return null;
+
+  let gains = 0;
+  let losses = 0;
 
   for(let i=1;i<=period;i++){
-    const d=values[i]-values[i-1];
-    if(d>=0) gains+=d;
-    else losses-=d;
+
+    const d =
+      values[i] -
+      values[i-1];
+
+    if(d >= 0)
+      gains += d;
+    else
+      losses -= d;
   }
 
-  let avgGain=gains/period;
-  let avgLoss=losses/period;
+  let avgGain = gains/period;
+  let avgLoss = losses/period;
 
-  for(let i=period+1;i<values.length;i++){
-    const d=values[i]-values[i-1];
-    const gain=Math.max(d,0);
-    const loss=Math.max(-d,0);
+  for(
+    let i=period+1;
+    i<values.length;
+    i++
+  ){
 
-    avgGain=((avgGain*(period-1))+gain)/period;
-    avgLoss=((avgLoss*(period-1))+loss)/period;
+    const d =
+      values[i] -
+      values[i-1];
+
+    const gain =
+      Math.max(d,0);
+
+    const loss =
+      Math.max(-d,0);
+
+    avgGain =
+      ((avgGain*(period-1))+gain)
+      /period;
+
+    avgLoss =
+      ((avgLoss*(period-1))+loss)
+      /period;
   }
 
-  if(avgLoss===0) return 100;
+  if(avgLoss === 0)
+    return 100;
 
-  const rs=avgGain/avgLoss;
-  return 100-(100/(1+rs));
+  const rs =
+    avgGain/avgLoss;
+
+  return 100 -
+    (100/(1+rs));
 }
 
-function atr(data,period=14){
-  if(data.length<=period) return null;
 
-  const tr=[];
+/* =========================
+   ATR
+   ========================= */
+
+function atr(data,period=14){
+
+  if(data.length <= period)
+    return null;
+
+  const tr = [];
 
   for(let i=1;i<data.length;i++){
-    const high=data[i].high;
-    const low=data[i].low;
-    const prev=data[i-1].close;
+
+    const high =
+      data[i].high;
+
+    const low =
+      data[i].low;
+
+    const prev =
+      data[i-1].close;
 
     tr.push(
       Math.max(
@@ -311,56 +499,179 @@ function atr(data,period=14){
     );
   }
 
-  return tr.slice(-period)
-    .reduce((a,b)=>a+b,0)/period;
+  return tr
+    .slice(-period)
+    .reduce((a,b)=>a+b,0)
+    /period;
 }
 
+
+/* =========================
+   FORMATTAZIONE
+   ========================= */
+
 function format(n){
-  if(n===null || n===undefined || !Number.isFinite(n)) return "—";
+
+  if(
+    n === null ||
+    n === undefined ||
+    !Number.isFinite(n)
+  ){
+    return "—";
+  }
+
   return Number(n).toFixed(5);
 }
 
+
+/* =========================================================
+   ANALISI PRINCIPALE
+   ========================================================= */
+
 function calculateFromCandles(){
 
-  if(candles.length < 60) return;
+  if(candles.length < 60)
+    return;
 
-  const closes = candles.map(x => x.close);
-  const price = closes[closes.length - 1];
 
-  const e20 = ema(closes,20);
-  const e50 = ema(closes,50);
-  const r = rsi(closes,14);
+  /*
+    IMPORTANTE:
+    escludiamo l'ultima candela perché potrebbe
+    essere ancora in formazione.
+  */
 
-  const fast = emaSeries(closes,12);
-  const slow = emaSeries(closes,26);
+  const closedCandles =
+    candles.slice(0,-1);
+
+  if(closedCandles.length < 60)
+    return;
+
+
+  const closes =
+    closedCandles.map(
+      x => x.close
+    );
+
+
+  const price =
+    closes[closes.length-1];
+
+
+  /* =========================
+     INDICATORI
+     ========================= */
+
+  const e20 =
+    ema(closes,20);
+
+  const e50 =
+    ema(closes,50);
+
+  const r =
+    rsi(closes,14);
+
+
+  const fast =
+    emaSeries(closes,12);
+
+  const slow =
+    emaSeries(closes,26);
+
 
   const macdSeries = [];
 
-  for(let i=0;i<closes.length;i++){
-    if(fast[i] !== null && slow[i] !== null){
-      macdSeries.push(fast[i] - slow[i]);
+
+  for(
+    let i=0;
+    i<closes.length;
+    i++
+  ){
+
+    if(
+      fast[i] !== null &&
+      slow[i] !== null
+    ){
+
+      macdSeries.push(
+        fast[i]-slow[i]
+      );
     }
   }
 
-  const macd = macdSeries[macdSeries.length - 1];
-  const macdSignal = ema(macdSeries,9);
 
-  const a = atr(candles,14);
+  const macd =
+    macdSeries[
+      macdSeries.length-1
+    ];
 
-  const recent = candles.slice(-50);
 
-  const support = Math.min(...recent.map(x => x.low));
-  const resistance = Math.max(...recent.map(x => x.high));
+  const macdSignal =
+    ema(
+      macdSeries,
+      9
+    );
 
-  $("price").textContent = format(price);
-  $("ema20").textContent = format(e20);
-  $("ema50").textContent = format(e50);
-  $("rsi").textContent = r === null ? "—" : r.toFixed(2);
-  $("macd").textContent = format(macd);
-  $("macdSignal").textContent = format(macdSignal);
-  $("atr").textContent = format(a);
-  $("support").textContent = format(support);
-  $("resistance").textContent = format(resistance);
+
+  const a =
+    atr(
+      closedCandles,
+      14
+    );
+
+
+  const recent =
+    closedCandles.slice(-50);
+
+
+  const support =
+    Math.min(
+      ...recent.map(
+        x=>x.low
+      )
+    );
+
+
+  const resistance =
+    Math.max(
+      ...recent.map(
+        x=>x.high
+      )
+    );
+
+
+  /* =========================
+     VISUALIZZAZIONE
+     ========================= */
+
+  $("price").textContent =
+    format(price);
+
+  $("ema20").textContent =
+    format(e20);
+
+  $("ema50").textContent =
+    format(e50);
+
+  $("rsi").textContent =
+    r === null
+      ? "—"
+      : r.toFixed(2);
+
+  $("macd").textContent =
+    format(macd);
+
+  $("macdSignal").textContent =
+    format(macdSignal);
+
+  $("atr").textContent =
+    format(a);
+
+  $("support").textContent =
+    format(support);
+
+  $("resistance").textContent =
+    format(resistance);
+
 
   /* =========================
      CONTROLLO DATI
@@ -376,38 +687,70 @@ function calculateFromCandles(){
     !Number.isFinite(a) ||
     a <= 0
   ){
-    $("signal").textContent = "ATTENDI";
-    $("score").textContent = "—";
-    $("sl").textContent = "—";
-    $("tp").textContent = "—";
+
+    $("signal").textContent =
+      "ATTENDI";
+
+    $("score").textContent =
+      "—";
+
+    $("sl").textContent =
+      "—";
+
+    $("tp").textContent =
+      "—";
+
     return;
   }
 
+
   /* =========================
-     CONFERMA DELLA CANDELA
+     CANDELA CHIUSA
      ========================= */
 
-  const lastCandle = candles[candles.length - 1];
+  const lastCandle =
+    closedCandles[
+      closedCandles.length-1
+    ];
 
-  const candleOpen = lastCandle.open;
-  const candleClose = lastCandle.close;
-  const candleHigh = lastCandle.high;
-  const candleLow = lastCandle.low;
 
-  const candleBody = Math.abs(candleClose - candleOpen);
-  const candleRange = candleHigh - candleLow;
+  const candleOpen =
+    lastCandle.open;
+
+  const candleClose =
+    lastCandle.close;
+
+  const candleHigh =
+    lastCandle.high;
+
+  const candleLow =
+    lastCandle.low;
+
+
+  const candleBody =
+    Math.abs(
+      candleClose-candleOpen
+    );
+
+
+  const candleRange =
+    candleHigh-candleLow;
+
 
   const strongCandle =
     candleRange > 0 &&
-    candleBody / candleRange >= 0.25;
+    candleBody/candleRange >= 0.25;
+
 
   const bullishCandle =
     candleClose > candleOpen &&
     strongCandle;
 
+
   const bearishCandle =
     candleClose < candleOpen &&
     strongCandle;
+
 
   /* =========================
      PUNTEGGIO
@@ -416,25 +759,48 @@ function calculateFromCandles(){
   let longScore = 0;
   let shortScore = 0;
 
-  if(price > e20) longScore++;
-  if(price < e20) shortScore++;
 
-  if(e20 > e50) longScore++;
-  if(e20 < e50) shortScore++;
+  if(price > e20)
+    longScore++;
 
-  if(r >= 50 && r <= 70) longScore++;
-  if(r >= 30 && r <= 50) shortScore++;
+  if(price < e20)
+    shortScore++;
 
-  if(macd > macdSignal) longScore++;
-  if(macd < macdSignal) shortScore++;
 
-  /*
-    I 4 indicatori danno massimo 4 punti.
-    La candela di conferma porta il segnale
-    effettivo a 5/5.
-  */
+  if(e20 > e50)
+    longScore++;
 
-  let score = Math.max(longScore, shortScore);
+  if(e20 < e50)
+    shortScore++;
+
+
+  if(
+    r >= 50 &&
+    r <= 70
+  )
+    longScore++;
+
+
+  if(
+    r >= 30 &&
+    r <= 50
+  )
+    shortScore++;
+
+
+  if(macd > macdSignal)
+    longScore++;
+
+  if(macd < macdSignal)
+    shortScore++;
+
+
+  let score =
+    Math.max(
+      longScore,
+      shortScore
+    );
+
 
   if(
     longScore === 4 &&
@@ -442,6 +808,7 @@ function calculateFromCandles(){
   ){
     score = 5;
   }
+
 
   if(
     shortScore === 4 &&
@@ -450,20 +817,27 @@ function calculateFromCandles(){
     score = 5;
   }
 
-  $("score").textContent = score + "/5";
+
+  $("score").textContent =
+    score + "/5";
+
 
   /* =========================
-     SEGNALE
+     SEGNALE BASE
      ========================= */
 
-  let signal = "ATTENDI";
+  let signal =
+    "ATTENDI";
+
 
   if(
     longScore === 4 &&
     r < 70 &&
     bullishCandle
   ){
-    signal = "POSSIBILE LONG";
+
+    signal =
+      "POSSIBILE LONG";
   }
 
   else if(
@@ -471,332 +845,672 @@ function calculateFromCandles(){
     r > 30 &&
     bearishCandle
   ){
-    signal = "POSSIBILE SHORT";
+
+    signal =
+      "POSSIBILE SHORT";
   }
 
-  /* =========================
-     BLOCCO SEGNALI DUPLICATI
-     ========================= */
 
-  const candleId =
-    candles.length + "_" +
-    candles[candles.length - 1].close;
-
-  if(
-    signal !== "ATTENDI" &&
-    candleId === lastSignalCandle &&
-    signal === lastSignal
-  ){
-    signal = "ATTENDI";
-  }
-
-  if(signal !== "ATTENDI"){
-    lastSignalCandle = candleId;
-    lastSignal = signal;
-  }
-
-  /* =========================
-     TAKE PROFIT PICCOLI
-     ========================= */
+  /* =================================================
+     TAKE PROFIT BREVI
+     ================================================= */
 
   let sl;
   let tp1;
   let tp2;
   let tp3;
 
-  const pair = $("pair").value;
+
+  const pair =
+    $("pair").value;
+
+
+  /*
+    Per Forex:
+    TP molto corti.
+
+    Per Oro:
+    distanze leggermente maggiori
+    perché l'escursione è normalmente superiore.
+  */
 
   let tpCap1;
   let tpCap2;
   let tpCap3;
 
+
   if(pair === "XAU/USD"){
 
-    tpCap1 = price * 0.0020;
-    tpCap2 = price * 0.0035;
-    tpCap3 = price * 0.0050;
+    tpCap1 =
+      price * 0.0010;
 
-  }else{
+    tpCap2 =
+      price * 0.0018;
 
-    tpCap1 = price * 0.0015;
-    tpCap2 = price * 0.0025;
-    tpCap3 = price * 0.0035;
+    tpCap3 =
+      price * 0.0028;
+
   }
 
-  /* =========================
+  else{
+
+    tpCap1 =
+      price * 0.0008;
+
+    tpCap2 =
+      price * 0.0014;
+
+    tpCap3 =
+      price * 0.0020;
+  }
+
+
+  /* =================================================
      LONG
-     ========================= */
+     ================================================= */
 
-  if(signal === "POSSIBILE LONG"){
+  if(
+    signal === "POSSIBILE LONG"
+  ){
 
-    sl = Math.min(
-      support,
-      price - a * 1.5
-    );
+    /*
+      SL più vicino rispetto
+      alla versione precedente.
+    */
 
-    const riskDistance = price - sl;
+    sl =
+      Math.min(
+        support,
+        price-a*1.15
+      );
 
-    const distance1 = Math.min(
-      a * 0.40,
-      tpCap1
-    );
 
-    const distance2 = Math.min(
-      a * 0.65,
-      tpCap2
-    );
+    const riskDistance =
+      price-sl;
 
-    const distance3 = Math.min(
-      a * 0.90,
-      tpCap3
-    );
 
-    tp1 = price + distance1;
-    tp2 = price + distance2;
-    tp3 = price + distance3;
+    /*
+      TP piccoli:
+      0.25 / 0.45 / 0.70 ATR
+    */
+
+    const distance1 =
+      Math.min(
+        a*0.25,
+        tpCap1
+      );
+
+
+    const distance2 =
+      Math.min(
+        a*0.45,
+        tpCap2
+      );
+
+
+    const distance3 =
+      Math.min(
+        a*0.70,
+        tpCap3
+      );
+
+
+    tp1 =
+      price+distance1;
+
+    tp2 =
+      price+distance2;
+
+    tp3 =
+      price+distance3;
+
+
+    /*
+      Se c'è una resistenza
+      molto vicina, TP1 viene
+      anticipato.
+    */
 
     if(
       Number.isFinite(resistance) &&
       resistance > price &&
       resistance < tp1
     ){
-      tp1 = resistance;
+
+      tp1 =
+        resistance;
     }
+
+
+    /*
+      Controllo minimo del TP1.
+      Evitiamo TP troppo piccoli
+      rispetto al rischio.
+    */
 
     if(
       !Number.isFinite(riskDistance) ||
       riskDistance <= 0 ||
       !Number.isFinite(tp1) ||
       tp1 <= price ||
-      (tp1-price)/riskDistance < 0.30
+      (tp1-price)/riskDistance < 0.35
     ){
-      signal = "ATTENDI";
+
+      signal =
+        "ATTENDI";
     }
+
   }
 
-  /* =========================
+
+  /* =================================================
      SHORT
-     ========================= */
+     ================================================= */
 
-  if(signal === "POSSIBILE SHORT"){
+  if(
+    signal === "POSSIBILE SHORT"
+  ){
 
-    sl = Math.max(
-      resistance,
-      price + a * 1.5
-    );
+    sl =
+      Math.max(
+        resistance,
+        price+a*1.15
+      );
 
-    const riskDistance = sl - price;
 
-    const distance1 = Math.min(
-      a * 0.40,
-      tpCap1
-    );
+    const riskDistance =
+      sl-price;
 
-    const distance2 = Math.min(
-      a * 0.65,
-      tpCap2
-    );
 
-    const distance3 = Math.min(
-      a * 0.90,
-      tpCap3
-    );
+    const distance1 =
+      Math.min(
+        a*0.25,
+        tpCap1
+      );
 
-    tp1 = price - distance1;
-    tp2 = price - distance2;
-    tp3 = price - distance3;
+
+    const distance2 =
+      Math.min(
+        a*0.45,
+        tpCap2
+      );
+
+
+    const distance3 =
+      Math.min(
+        a*0.70,
+        tpCap3
+      );
+
+
+    tp1 =
+      price-distance1;
+
+    tp2 =
+      price-distance2;
+
+    tp3 =
+      price-distance3;
+
 
     if(
       Number.isFinite(support) &&
       support < price &&
       support > tp1
     ){
-      tp1 = support;
+
+      tp1 =
+        support;
     }
+
 
     if(
       !Number.isFinite(riskDistance) ||
       riskDistance <= 0 ||
       !Number.isFinite(tp1) ||
       tp1 >= price ||
-      (price-tp1)/riskDistance < 0.30
+      (price-tp1)/riskDistance < 0.35
     ){
-      signal = "ATTENDI";
+
+      signal =
+        "ATTENDI";
     }
+
   }
 
-  /* =========================
-     RISULTATO
-     ========================= */
 
-  $("signal").textContent = signal;
+  /* =================================================
+     BLOCCO SEGNALI DUPLICATI
+     ================================================= */
+
+  /*
+    Usiamo l'indice della candela CHIUSA.
+    Non il prezzo, perché il prezzo può cambiare.
+  */
+
+  const candleId =
+    closedCandles.length;
+
+
+  /*
+    Il blocco viene applicato soltanto
+    se il segnale è ancora valido
+    dopo tutti i controlli TP/SL.
+  */
+
+  if(
+    signal !== "ATTENDI" &&
+    candleId === lastSignalCandle &&
+    signal === lastSignal
+  ){
+
+    signal =
+      "ATTENDI";
+  }
+
+
+  /* =================================================
+     RISULTATO
+     ================================================= */
+
+  $("signal").textContent =
+    signal;
+
 
   if(
     signal === "POSSIBILE LONG" ||
     signal === "POSSIBILE SHORT"
   ){
 
-    $("sl").textContent = format(sl);
+    $("sl").textContent =
+      format(sl);
+
 
     $("tp").textContent =
       "TP1: " + format(tp1) + "\n" +
       "TP2: " + format(tp2) + "\n" +
       "TP3: " + format(tp3);
 
-  }else{
 
-    $("sl").textContent = "—";
-    $("tp").textContent = "—";
+    /*
+      Registriamo il segnale
+      solo adesso, dopo tutti i controlli.
+    */
+
+    lastSignalCandle =
+      candleId;
+
+    lastSignal =
+      signal;
+
   }
+
+  else{
+
+    $("sl").textContent =
+      "—";
+
+    $("tp").textContent =
+      "—";
+  }
+
 }
+
+
+/* =========================================================
+   CARICAMENTO MERCATO
+   ========================================================= */
+
 async function loadMarket(){
 
-  const key=$("apiKey").value.trim();
+  const key =
+    $("apiKey").value.trim();
+
 
   if(!key){
-    setStatus("Inserisci la API key","error");
+
+    setStatus(
+      "Inserisci la API key",
+      "error"
+    );
+
     return;
   }
 
-  localStorage.setItem("td_key",key);
 
-  setStatus("Caricamento dati reali...");
+  localStorage.setItem(
+    "td_key",
+    key
+  );
 
-  const symbol=$("pair").value;
-  const interval=$("interval").value;
 
-  const url=
+  /*
+    Reset del segnale quando
+    cambiamo mercato/dati.
+  */
+
+  lastSignalCandle =
+    null;
+
+  lastSignal =
+    "ATTENDI";
+
+
+  setStatus(
+    "Caricamento dati reali..."
+  );
+
+
+  const symbol =
+    $("pair").value;
+
+  const interval =
+    $("interval").value;
+
+
+  const url =
     "https://api.twelvedata.com/time_series"+
-    "?symbol="+encodeURIComponent(symbol)+
-    "&interval="+encodeURIComponent(interval)+
+    "?symbol="+
+    encodeURIComponent(symbol)+
+    "&interval="+
+    encodeURIComponent(interval)+
     "&outputsize=120"+
-    "&apikey="+encodeURIComponent(key);
+    "&apikey="+
+    encodeURIComponent(key);
+
 
   try{
 
-    const response=await fetch(url);
-    const data=await response.json();
+    const response =
+      await fetch(url);
 
-    if(data.status==="error" || !data.values){
-      throw new Error(data.message || "Errore API");
+    const data =
+      await response.json();
+
+
+    if(
+      data.status === "error" ||
+      !data.values
+    ){
+
+      throw new Error(
+        data.message ||
+        "Errore API"
+      );
     }
 
-    candles=data.values.reverse().map(x=>({
-      open:Number(x.open),
-      high:Number(x.high),
-      low:Number(x.low),
-      close:Number(x.close)
-    }));
+
+    candles =
+      data.values
+        .reverse()
+        .map(x=>({
+
+          open:Number(x.open),
+
+          high:Number(x.high),
+
+          low:Number(x.low),
+
+          close:Number(x.close)
+
+        }));
+
+
+    /*
+      Nuovo set di dati:
+      reset completo del blocco segnali.
+    */
+
+    lastSignalCandle =
+      null;
+
+    lastSignal =
+      "ATTENDI";
+
 
     setStatus(
-      "Dati reali caricati · "+candles.length+" candele",
+      "Dati reali caricati · "+
+      candles.length+
+      " candele",
       "ok"
     );
 
+
     calculateFromCandles();
+
     drawChart(candles);
+
 
   }catch(error){
 
     console.error(error);
 
+
     setStatus(
-      "Errore: "+error.message,
+      "Errore: "+
+      error.message,
       "error"
     );
   }
+
 }
+
+
+/* =========================================================
+   AGGIORNA ANALISI
+   ========================================================= */
 
 function analyze(){
 
   if(candles.length){
+
     calculateFromCandles();
+
   }
+
 }
+
+
+/* =========================================================
+   DEMO
+   ========================================================= */
 
 function demo(){
 
-  candles=[];
+  candles = [];
 
-  let price=1.10;
+
+  /*
+    Reset segnale.
+  */
+
+  lastSignalCandle =
+    null;
+
+  lastSignal =
+    "ATTENDI";
+
+
+  let price =
+    1.10;
+
 
   for(let i=0;i<120;i++){
 
-    const change=(Math.random()-0.48)*0.004;
+    const change =
+      (Math.random()-0.48)*0.004;
 
-    const open=price;
 
-    price+=change;
+    const open =
+      price;
 
-    const close=price;
 
-    const high=Math.max(open,close)+Math.random()*0.002;
-    const low=Math.min(open,close)-Math.random()*0.002;
+    price += change;
+
+
+    const close =
+      price;
+
+
+    const high =
+      Math.max(
+        open,
+        close
+      )+
+      Math.random()*0.002;
+
+
+    const low =
+      Math.min(
+        open,
+        close
+      )-
+      Math.random()*0.002;
+
 
     candles.push({
+
       open,
       high,
       low,
       close
+
     });
+
   }
 
-  setStatus("Modalità demo");
+
+  setStatus(
+    "Modalità demo"
+  );
+
 
   calculateFromCandles();
+
+  drawChart(candles);
+
 }
+
+
+/* =========================================================
+   GRAFICO
+   ========================================================= */
 
 function drawChart(data){
 
-  const canvas=$("chart");
-  const ctx=canvas.getContext("2d");
+  const canvas =
+    $("chart");
 
-  const width=canvas.clientWidth;
-  const height=canvas.clientHeight;
+  const ctx =
+    canvas.getContext("2d");
 
-  const dpr=window.devicePixelRatio||1;
 
-  canvas.width=width*dpr;
-  canvas.height=height*dpr;
+  const width =
+    canvas.clientWidth;
 
-  ctx.scale(dpr,dpr);
+  const height =
+    canvas.clientHeight;
 
-  ctx.clearRect(0,0,width,height);
 
-  if(!data.length)return;
+  const dpr =
+    window.devicePixelRatio || 1;
 
-  const values=data.map(x=>x.close);
 
-  const min=Math.min(...values);
-  const max=Math.max(...values);
+  canvas.width =
+    width*dpr;
 
-  const pad=20;
+  canvas.height =
+    height*dpr;
+
+
+  ctx.scale(
+    dpr,
+    dpr
+  );
+
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  if(!data.length)
+    return;
+
+
+  const values =
+    data.map(
+      x=>x.close
+    );
+
+
+  const min =
+    Math.min(...values);
+
+  const max =
+    Math.max(...values);
+
+
+  const pad =
+    20;
+
 
   ctx.beginPath();
 
-  values.forEach((v,i)=>{
 
-    const x=
-      pad+
-      i*(width-pad*2)/(values.length-1);
+  values.forEach(
+    (v,i)=>{
 
-    const y=
-      height-pad-
-      ((v-min)/(max-min))*(height-pad*2);
+      const x =
+        pad+
+        i*
+        (width-pad*2)/
+        (values.length-1);
 
-    if(i===0)ctx.moveTo(x,y);
-    else ctx.lineTo(x,y);
 
-  });
+      const y =
+        height-pad-
+        ((v-min)/(max-min))*
+        (height-pad*2);
 
-  ctx.strokeStyle="#60a5fa";
-  ctx.lineWidth=2;
+
+      if(i===0)
+        ctx.moveTo(x,y);
+
+      else
+        ctx.lineTo(x,y);
+
+    }
+  );
+
+
+  ctx.strokeStyle =
+    "#60a5fa";
+
+  ctx.lineWidth =
+    2;
+
   ctx.stroke();
+
 }
 
-window.addEventListener("resize",()=>{
-  if(candles.length) drawChart(candles);
-});
+
+/* =========================================================
+   RIDIMENSIONAMENTO
+   ========================================================= */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+
+    if(candles.length)
+      drawChart(candles);
+
+  }
+);
 
 </script>
 
