@@ -322,167 +322,333 @@ function format(n){
 
 function calculateFromCandles(){
 
-  if(candles.length<60) return;
+  if(candles.length < 60) return;
 
-  const closes=candles.map(x=>x.close);
+  const closes = candles.map(x => x.close);
+  const price = closes[closes.length - 1];
 
-  const price=closes[closes.length-1];
+  const e20 = ema(closes,20);
+  const e50 = ema(closes,50);
+  const r = rsi(closes,14);
 
-  const e20=ema(closes,20);
-  const e50=ema(closes,50);
-  const r=rsi(closes,14);
+  const fast = emaSeries(closes,12);
+  const slow = emaSeries(closes,26);
 
-  const fast=emaSeries(closes,12);
-  const slow=emaSeries(closes,26);
-
-  const macdSeries=[];
+  const macdSeries = [];
 
   for(let i=0;i<closes.length;i++){
-    if(fast[i]!==null && slow[i]!==null){
-      macdSeries.push(fast[i]-slow[i]);
+    if(fast[i] !== null && slow[i] !== null){
+      macdSeries.push(fast[i] - slow[i]);
     }
   }
 
-  const macd=macdSeries[macdSeries.length-1];
+  const macd = macdSeries[macdSeries.length - 1];
+  const macdSignal = ema(macdSeries,9);
 
-  const macdSignal=ema(macdSeries,9);
+  const a = atr(candles,14);
 
-  const a=atr(candles,14);
+  const recent = candles.slice(-50);
 
-  const recent=candles.slice(-50);
+  const support = Math.min(...recent.map(x => x.low));
+  const resistance = Math.max(...recent.map(x => x.high));
 
-  const support=Math.min(...recent.map(x=>x.low));
-  const resistance=Math.max(...recent.map(x=>x.high));
+  $("price").textContent = format(price);
+  $("ema20").textContent = format(e20);
+  $("ema50").textContent = format(e50);
+  $("rsi").textContent = r === null ? "—" : r.toFixed(2);
+  $("macd").textContent = format(macd);
+  $("macdSignal").textContent = format(macdSignal);
+  $("atr").textContent = format(a);
+  $("support").textContent = format(support);
+  $("resistance").textContent = format(resistance);
 
-  $("price").textContent=format(price);
-  $("ema20").textContent=format(e20);
-  $("ema50").textContent=format(e50);
-  $("rsi").textContent=r===null?"—":r.toFixed(2);
-  $("macd").textContent=format(macd);
-  $("macdSignal").textContent=format(macdSignal);
-  $("atr").textContent=format(a);
-  $("support").textContent=format(support);
-  $("resistance").textContent=format(resistance);
-let longScore=0;
-let shortScore=0;
+  /* =========================
+     CONTROLLO DATI
+     ========================= */
 
-if(price>e20) longScore++;
-if(price<e20) shortScore++;
+  if(
+    !Number.isFinite(price) ||
+    !Number.isFinite(e20) ||
+    !Number.isFinite(e50) ||
+    !Number.isFinite(r) ||
+    !Number.isFinite(macd) ||
+    !Number.isFinite(macdSignal) ||
+    !Number.isFinite(a) ||
+    a <= 0
+  ){
+    $("signal").textContent = "ATTENDI";
+    $("score").textContent = "—";
+    $("sl").textContent = "—";
+    $("tp").textContent = "—";
+    return;
+  }
 
-if(e20>e50) longScore++;
-if(e20<e50) shortScore++;
+  /* =========================
+     CONFERMA DELLA CANDELA
+     ========================= */
 
-if(r>=50 && r<=70) longScore++;
-if(r>=30 && r<=50) shortScore++;
+  const lastCandle = candles[candles.length - 1];
 
-if(macd>macdSignal) longScore++;
-if(macd<macdSignal) shortScore++;
-const score = Math.max(longScore, shortScore);
+  const candleOpen = lastCandle.open;
+  const candleClose = lastCandle.close;
+  const candleHigh = lastCandle.high;
+  const candleLow = lastCandle.low;
 
-$("score").textContent = score + "/5";
-let signal = "ATTENDI";
+  const candleBody = Math.abs(candleClose - candleOpen);
+  const candleRange = candleHigh - candleLow;
 
-/*
-  Conferma tecnica:
-  4 indicatori + candela = massimo 5 punti
-*/
+  const strongCandle =
+    candleRange > 0 &&
+    candleBody / candleRange >= 0.25;
 
-if(
-  longScore === 4 &&
-  r < 70 &&
-  bullishCandle
-){
-  signal = "POSSIBILE LONG";
-}
+  const bullishCandle =
+    candleClose > candleOpen &&
+    strongCandle;
 
-else if(
-  shortScore === 4 &&
-  r > 30 &&
-  bearishCandle
-){
-  signal = "POSSIBILE SHORT";
-}
+  const bearishCandle =
+    candleClose < candleOpen &&
+    strongCandle;
 
-/*
-  Evita di ripetere lo stesso segnale
-  sulla stessa candela.
-*/
+  /* =========================
+     PUNTEGGIO
+     ========================= */
 
-const candleId =
-  candles.length + "_" +
-  candles[candles.length - 1].close;
+  let longScore = 0;
+  let shortScore = 0;
 
-if(
-  signal !== "ATTENDI" &&
-  candleId === lastSignalCandle &&
-  signal === lastSignal
-){
-  signal = "ATTENDI";
-}
+  if(price > e20) longScore++;
+  if(price < e20) shortScore++;
 
-if(signal !== "ATTENDI"){
-  lastSignalCandle = candleId;
-  lastSignal = signal;
-}
+  if(e20 > e50) longScore++;
+  if(e20 < e50) shortScore++;
 
-$("signal").textContent=signal;
+  if(r >= 50 && r <= 70) longScore++;
+  if(r >= 30 && r <= 50) shortScore++;
 
+  if(macd > macdSignal) longScore++;
+  if(macd < macdSignal) shortScore++;
 
-let sl,tp1,tp2,tp3;
+  /*
+    I 4 indicatori danno massimo 4 punti.
+    La candela di conferma porta il segnale
+    effettivo a 5/5.
+  */
 
-if(signal==="POSSIBILE LONG"){
-  sl=Math.min(support,price-a*1.5);
-  const riskDistance=price-sl;
+  let score = Math.max(longScore, shortScore);
 
-  // Obiettivi ravvicinati basati sulla volatilità
-  tp1=price+a*0.5;
-  tp2=price+a*0.8;
-  tp3=price+a*1.1;
+  if(
+    longScore === 4 &&
+    bullishCandle
+  ){
+    score = 5;
+  }
 
-  // Evita segnali con rapporto rischio/rendimento troppo basso
-  if(!Number.isFinite(riskDistance) ||
-     riskDistance<=0 ||
-     (tp1-price)/riskDistance<0.5){
-    signal="ATTENDI";
+  if(
+    shortScore === 4 &&
+    bearishCandle
+  ){
+    score = 5;
+  }
+
+  $("score").textContent = score + "/5";
+
+  /* =========================
+     SEGNALE
+     ========================= */
+
+  let signal = "ATTENDI";
+
+  if(
+    longScore === 4 &&
+    r < 70 &&
+    bullishCandle
+  ){
+    signal = "POSSIBILE LONG";
+  }
+
+  else if(
+    shortScore === 4 &&
+    r > 30 &&
+    bearishCandle
+  ){
+    signal = "POSSIBILE SHORT";
+  }
+
+  /* =========================
+     BLOCCO SEGNALI DUPLICATI
+     ========================= */
+
+  const candleId =
+    candles.length + "_" +
+    candles[candles.length - 1].close;
+
+  if(
+    signal !== "ATTENDI" &&
+    candleId === lastSignalCandle &&
+    signal === lastSignal
+  ){
+    signal = "ATTENDI";
+  }
+
+  if(signal !== "ATTENDI"){
+    lastSignalCandle = candleId;
+    lastSignal = signal;
+  }
+
+  /* =========================
+     TAKE PROFIT PICCOLI
+     ========================= */
+
+  let sl;
+  let tp1;
+  let tp2;
+  let tp3;
+
+  const pair = $("pair").value;
+
+  let tpCap1;
+  let tpCap2;
+  let tpCap3;
+
+  if(pair === "XAU/USD"){
+
+    tpCap1 = price * 0.0020;
+    tpCap2 = price * 0.0035;
+    tpCap3 = price * 0.0050;
+
+  }else{
+
+    tpCap1 = price * 0.0015;
+    tpCap2 = price * 0.0025;
+    tpCap3 = price * 0.0035;
+  }
+
+  /* =========================
+     LONG
+     ========================= */
+
+  if(signal === "POSSIBILE LONG"){
+
+    sl = Math.min(
+      support,
+      price - a * 1.5
+    );
+
+    const riskDistance = price - sl;
+
+    const distance1 = Math.min(
+      a * 0.40,
+      tpCap1
+    );
+
+    const distance2 = Math.min(
+      a * 0.65,
+      tpCap2
+    );
+
+    const distance3 = Math.min(
+      a * 0.90,
+      tpCap3
+    );
+
+    tp1 = price + distance1;
+    tp2 = price + distance2;
+    tp3 = price + distance3;
+
+    if(
+      Number.isFinite(resistance) &&
+      resistance > price &&
+      resistance < tp1
+    ){
+      tp1 = resistance;
+    }
+
+    if(
+      !Number.isFinite(riskDistance) ||
+      riskDistance <= 0 ||
+      !Number.isFinite(tp1) ||
+      tp1 <= price ||
+      (tp1-price)/riskDistance < 0.30
+    ){
+      signal = "ATTENDI";
+    }
+  }
+
+  /* =========================
+     SHORT
+     ========================= */
+
+  if(signal === "POSSIBILE SHORT"){
+
+    sl = Math.max(
+      resistance,
+      price + a * 1.5
+    );
+
+    const riskDistance = sl - price;
+
+    const distance1 = Math.min(
+      a * 0.40,
+      tpCap1
+    );
+
+    const distance2 = Math.min(
+      a * 0.65,
+      tpCap2
+    );
+
+    const distance3 = Math.min(
+      a * 0.90,
+      tpCap3
+    );
+
+    tp1 = price - distance1;
+    tp2 = price - distance2;
+    tp3 = price - distance3;
+
+    if(
+      Number.isFinite(support) &&
+      support < price &&
+      support > tp1
+    ){
+      tp1 = support;
+    }
+
+    if(
+      !Number.isFinite(riskDistance) ||
+      riskDistance <= 0 ||
+      !Number.isFinite(tp1) ||
+      tp1 >= price ||
+      (price-tp1)/riskDistance < 0.30
+    ){
+      signal = "ATTENDI";
+    }
+  }
+
+  /* =========================
+     RISULTATO
+     ========================= */
+
+  $("signal").textContent = signal;
+
+  if(
+    signal === "POSSIBILE LONG" ||
+    signal === "POSSIBILE SHORT"
+  ){
+
+    $("sl").textContent = format(sl);
+
+    $("tp").textContent =
+      "TP1: " + format(tp1) + "\n" +
+      "TP2: " + format(tp2) + "\n" +
+      "TP3: " + format(tp3);
+
+  }else{
+
+    $("sl").textContent = "—";
+    $("tp").textContent = "—";
   }
 }
-
-if(signal==="POSSIBILE SHORT"){
-  sl=Math.max(resistance,price+a*1.5);
-  const riskDistance=sl-price;
-
-  // Obiettivi ravvicinati basati sulla volatilità
-  tp1=price-a*0.5;
-  tp2=price-a*0.8;
-  tp3=price-a*1.1;
-
-  // Evita segnali con rapporto rischio/rendimento troppo basso
-  if(!Number.isFinite(riskDistance) ||
-     riskDistance<=0 ||
-     (price-tp1)/riskDistance<0.5){
-    signal="ATTENDI";
-  }
-}
-
-$("signal").textContent=signal;
-
-if(signal==="POSSIBILE LONG" ||
-   signal==="POSSIBILE SHORT"){
-
-  $("sl").textContent=format(sl);
-
-  $("tp").textContent=
-    "TP1: "+format(tp1)+"\n"+
-    "TP2: "+format(tp2)+"\n"+
-    "TP3: "+format(tp3);
-
-}else{
-  $("sl").textContent="—";
-  $("tp").textContent="—";
-}
-
-}
-
 async function loadMarket(){
 
   const key=$("apiKey").value.trim();
