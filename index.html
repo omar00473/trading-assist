@@ -380,15 +380,49 @@ if(macd<macdSignal) shortScore++;
 const score = Math.max(longScore, shortScore);
 
 $("score").textContent = score + "/5";
-let signal="ATTENDI";
+let signal = "ATTENDI";
 
-// Segnale solo con 4 conferme su 4.
-// Evita inoltre LONG in ipercomprato e SHORT in ipervenduto.
-if(longScore===4 && r<70){
-  signal="POSSIBILE LONG";
+/*
+  Conferma tecnica:
+  4 indicatori + candela = massimo 5 punti
+*/
+
+if(
+  longScore === 4 &&
+  r < 70 &&
+  bullishCandle
+){
+  signal = "POSSIBILE LONG";
 }
-else if(shortScore===4 && r>30){
-  signal="POSSIBILE SHORT";
+
+else if(
+  shortScore === 4 &&
+  r > 30 &&
+  bearishCandle
+){
+  signal = "POSSIBILE SHORT";
+}
+
+/*
+  Evita di ripetere lo stesso segnale
+  sulla stessa candela.
+*/
+
+const candleId =
+  candles.length + "_" +
+  candles[candles.length - 1].close;
+
+if(
+  signal !== "ATTENDI" &&
+  candleId === lastSignalCandle &&
+  signal === lastSignal
+){
+  signal = "ATTENDI";
+}
+
+if(signal !== "ATTENDI"){
+  lastSignalCandle = candleId;
+  lastSignal = signal;
 }
 
 $("signal").textContent=signal;
