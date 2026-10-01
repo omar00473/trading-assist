@@ -377,7 +377,9 @@ if(r>=30 && r<=50) shortScore++;
 
 if(macd>macdSignal) longScore++;
 if(macd<macdSignal) shortScore++;
+const score = Math.max(longScore, shortScore);
 
+$("score").textContent = score + "/5";
 let signal="ATTENDI";
 
 // Segnale solo con 4 conferme su 4.
